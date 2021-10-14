@@ -187,9 +187,9 @@ zplugin ice wait"0a" compile'{src/*.zsh,src/strategies/*}' atinit"ZSH_AUTOSUGGES
 zplugin light zsh-users/zsh-autosuggestions
 zplugin ice wait"0b" lucid
 zplugin light hlissner/zsh-autopair
-zplugin ice wait"0b" blockf lucid
+zplugin ice wait"0b" blockf atpull"zinit creinstall -q ." lucid
 zplugin light zsh-users/zsh-completions
-zplugin ice wait"0c" from"gh-r" as"command" lucid
+zplugin ice wait"0c" as"command" from"gh-r" lucid
 zplugin light junegunn/fzf
 zplugin ice wait"0c" as"completion" blockf lucid
 zplugin snippet https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh
@@ -221,13 +221,17 @@ zplugin ice wait"2" lucid
 zplugin light changyuheng/zsh-interactive-cd
 zplugin ice wait"2" pick"h.sh" lucid
 zplugin light paoloantinori/hhighlighter
-zplugin ice wait"2" as"command" pick"tldr" lucid
-zplugin light raylee/tldr
 
 if [[ $WSL_ENABLE ]]; then
   zplugin ice wait"2" atload"_zsh-notify-setting" lucid
   zplugin light marzocchi/zsh-notify
 fi
+
+ZMAN="$ZPFX/share/man"
+if ! [[ -d "$ZMAN/man1" ]]; then
+  mkdir -pv "$ZMAN/man1"
+fi
+manpath+=($ZMAN)
 
 load-file "$BVZSH/BlaCk-Void.zplugins" ~/.zplugins
 load-file ~/.zplugins.local
@@ -235,6 +239,11 @@ load-file ~/.zplugins.local
 ## -- Library Setting --------------------------------------
 zplugin ice wait multisrc"lazyenv.zsh completion.zsh fzf-set.zsh" lucid
 zplugin light $BVZSH/lib
+
+if [ -z "$BVZSH_TOOLS" ] ; then
+  export BVZSH_TOOLS='true'
+fi
+_zsh-tools $BVZSH_TOOLS
 
 _zpcompinit-custom
 zplugin cdreplay -q
